@@ -1,3 +1,11 @@
+"""
+Integrantes:
+Hou, Edwin	        8-1021-1916
+Arosemena, Miguel	8-1016-2330
+Corrales, Diego		8-1001-1890
+Camaño, Edward		8-1010-515
+Pino, Josué		    8-1012-688
+"""
 import matplotlib.pyplot as plt
 
 # Lista para almacenar la información de cada empleado como diccionarios
@@ -5,68 +13,75 @@ empleados = []
 
 # Bucle para recopilar información de cinco empleados
 for i in range(5):
-    try:
-        # Entrada del nombre del empleado y validación
-        nombreEmpleado = input("Ingrese el nombre del empleado {}: ".format(i + 1))
-        if not nombreEmpleado:
-            raise ValueError("El nombre no puede estar vacío.")
-        
-        # Entrada de la cédula del empleado y validación
-        cedula = input("Ingrese la cédula del empleado {}: ".format(nombreEmpleado))
-        if not cedula:
-            raise ValueError("La cédula no puede estar vacía.")
-        
-        # Entrada y validación de la edad del empleado
+    while True:  # Bucle para seguir pidiendo datos hasta que sean válidos
         try:
-            edad = int(input("Ingrese la edad del empleado {}: ".format(nombreEmpleado)))
-            if edad <= 0:
-                raise ValueError("La edad debe ser un número positivo.")
+            # Entrada del nombre del empleado y validación
+            nombreEmpleado = input("Ingrese el nombre del empleado {}: ".format(i + 1))
+            if not nombreEmpleado or not nombreEmpleado.replace(" ", "").isalpha():
+                raise ValueError("El nombre no puede estar vacío y debe contener solo letras.")
+            
+            # Entrada de la cédula del empleado y validación
+            cedula = input("Ingrese la cédula del empleado {}: ".format(nombreEmpleado))
+            if not cedula:
+                raise ValueError("La cédula no puede estar vacía.")
+            
+            # Entrada y validación de la edad del empleado
+            while True:  # Bucle para validar la edad
+                try:
+                    edad = int(input("Ingrese la edad del empleado {}: ".format(nombreEmpleado)))
+                    if edad <= 0:
+                        raise ValueError("La edad debe ser un número positivo.")
+                    break  # Salir del bucle si la edad es válida
+                except ValueError:
+                    print("Error: Por favor, ingrese un número válido para la edad.")
+
+            # Entrada y validación de las horas trabajadas por el empleado
+            while True:  # Bucle para validar las horas trabajadas
+                try:
+                    horasTrabajadas = float(input("Ingrese las horas trabajadas del empleado {}: ".format(nombreEmpleado)))
+                    if horasTrabajadas <= 0:
+                        raise ValueError("Las horas trabajadas deben ser un número positivo.")
+                    break  # Salir del bucle si las horas son válidas
+                except ValueError:
+                    print("Error: Por favor, ingrese un número válido para las horas trabajadas.")
+
+            # Entrada y validación del pago por hora del empleado
+            while True:  # Bucle para validar el pago por hora
+                try:
+                    pagoHora = float(input("Ingrese el pago por hora del empleado {}: ".format(nombreEmpleado)))
+                    if pagoHora <= 0:
+                        raise ValueError("El pago por hora debe ser un número positivo.")
+                    break  # Salir del bucle si el pago es válido
+                except ValueError:
+                    print("Error: Por favor, ingrese un número válido para el pago por hora.")
+
+            # Si todas las entradas son válidas, se calcula el salario bruto
+            salarioBruto = horasTrabajadas * pagoHora  # Cálculo de salario bruto
+            seguroSocial = salarioBruto * 0.0975  # Seguro social del 9.75%
+            seguroEducativo = salarioBruto * 0.0125  # Seguro educativo del 1.25%
+            impuestoRenta = salarioBruto * 0.10  # Impuesto sobre la renta del 10%
+            totalDeducciones = seguroSocial + seguroEducativo + impuestoRenta  # Suma total de las deducciones
+            sueldoPagar = salarioBruto - totalDeducciones  # Sueldo final después de deducciones
+
+            # Diccionario con la información del empleado
+            empleado = {
+                "nombre": nombreEmpleado,
+                "cedula": cedula,
+                "edad": edad,
+                "horasTrabajadas": horasTrabajadas,
+                "pagoHora": pagoHora,
+                "salarioBruto": salarioBruto,
+                "totalDeducciones": totalDeducciones,
+                "sueldoPagar": sueldoPagar
+            }
+            empleados.append(empleado)  # Agregar el diccionario a la lista de empleados
+
+            # Salir del bucle mientras se han ingresado correctamente todos los datos
+            break
+
         except ValueError as e:
-            print("Error en la entrada de edad:", e)
-            continue
-
-        # Entrada y validación de las horas trabajadas por el empleado
-        try:
-            horasTrabajadas = float(input("Ingrese las horas trabajadas del empleado {}: ".format(nombreEmpleado)))
-            if horasTrabajadas <= 0:
-                raise ValueError("Las horas trabajadas deben ser un número positivo.")
-        except ValueError as e:
-            print("Error en la entrada de horas trabajadas:", e)
-            continue
-
-        # Entrada y validación del pago por hora del empleado
-        try:
-            pagoHora = float(input("Ingrese el pago por hora del empleado {}: ".format(nombreEmpleado)))
-            if pagoHora <= 0:
-                raise ValueError("El pago por hora debe ser un número positivo.")
-        except ValueError as e:
-            print("Error en la entrada de pago por hora:", e)
-            continue
-
-        # Cálculo de salario bruto y deducciones
-        salarioBruto = horasTrabajadas * pagoHora  # Cálculo de salario bruto
-        seguroSocial = salarioBruto * 0.0975  # Seguro social del 9.75%
-        seguroEducativo = salarioBruto * 0.0125  # Seguro educativo del 1.25%
-        impuestoRenta = salarioBruto * 0.10  # Impuesto sobre la renta del 10%
-        totalDeducciones = seguroSocial + seguroEducativo + impuestoRenta  # Suma total de las deducciones
-        sueldoPagar = salarioBruto - totalDeducciones  # Sueldo final después de deducciones
-
-        # Diccionario con la información del empleado
-        empleado = {
-            "nombre": nombreEmpleado,
-            "cedula": cedula,
-            "edad": edad,
-            "horasTrabajadas": horasTrabajadas,
-            "pagoHora": pagoHora,
-            "salarioBruto": salarioBruto,
-            "totalDeducciones": totalDeducciones,
-            "sueldoPagar": sueldoPagar
-        }
-        empleados.append(empleado)  # Agregar el diccionario a la lista de empleados
-# Captura de excepciones al ingresar valores invalidos
-    except ValueError as e:
-        print("Error en los datos del empleado:", e)
-        print("Por favor, ingrese los datos nuevamente.\n")
+            print("Error:", e)
+            print("Por favor, ingrese los datos nuevamente.\n")
 
 # Imprimir encabezado de la tabla con bordes
 print("_"*136)
